@@ -112,3 +112,81 @@ def vigenere_decrypt(ciphertext, keyword):
       decrypted.append(char)
   return ''.join(decrypted)
 
+
+def gcd(a, b): #For Affine Cipher
+  """
+  Computes the greatest common divisor of two numbers using the Euclidean algorithm.
+
+  Args:
+    a (int): The first number.
+    b (int): The second number.
+
+  Returns:
+    int: The greatest common divisor of a and b.
+  """
+  while b:
+    a, b = b, a % b
+  return a
+
+
+"""
+Affine Cipher: A type of monoalphabetic substitution cipher, where each letter in an alphabet is mapped to its numeric equivalent,
+encrypted using a simple mathematical function, and then converted back to a letter. The encryption function is:
+E(x) = (a * x + b) % 26
+where 'a' and 'b' are keys, and 'x' is the numeric equivalent of the plaintext letter. The decryption function is:
+D(x) = a_inv * (x - b) % 26
+where 'a_inv' is the modular multiplicative inverse of 'a' modulo 26.
+
+The key 'a' must be chosen such that gcd(a, 26) = 1 to ensure that 'a' has an inverse modulo 26.
+"""
+
+def affine_encrypt(plaintext, a, b):
+  """
+  Encrypts the plaintext using the Affine cipher.
+
+  Args:
+    plaintext (str): The text to be encrypted.
+    a (int): The multiplicative key (must satisfy gcd(a, 26) = 1).
+    b (int): The additive key.
+
+  Returns:
+    str: The encrypted text.
+  """
+  if gcd(a, 26) != 1:
+    raise ValueError("Key 'a' must be coprime with 26.")
+  
+  encrypted = []
+  for char in plaintext:
+    if char.isalpha():
+      shift_base = ord('A') if char.isupper() else ord('a')
+      x = ord(char) - shift_base
+      encrypted.append(chr((a * x + b) % 26 + shift_base))
+    else:
+      encrypted.append(char)
+  return ''.join(encrypted)
+
+def affine_decrypt(ciphertext, a, b):
+  """
+  Decrypts the ciphertext using the Affine cipher.
+
+  Args:
+    ciphertext (str): The text to be decrypted.
+    a (int): The multiplicative key (must satisfy gcd(a, 26) = 1).
+    b (int): The additive key.
+
+  Returns:
+    str: The decrypted text.
+  """
+  if gcd(a, 26) != 1:
+    raise ValueError("Key 'a' must be coprime with 26.")
+  
+  a_inv = pow(a, -1, 26)  # Modular multiplicative inverse of 'a' modulo 26
+  decrypted = []
+  for char in ciphertext:
+    if char.isalpha():
+      shift_base = ord('A') if char.isupper() else ord('a')
+      y = ord(char) - shift_base
+      decrypted.append(chr((a_inv * (y - b)) % 26 + shift_base))
+    else:
+      decrypted.append(char)
+  return ''.join(decrypted)
