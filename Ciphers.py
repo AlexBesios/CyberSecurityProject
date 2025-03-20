@@ -305,3 +305,108 @@ def hill_decrypt(ciphertext, key_matrix):
         decrypted.extend(chr(int(round(num)) + ord("a")) for num in decrypted_vector)
 
     return "".join(decrypted)
+
+
+"""
+Substitution Cipher: A method of encryption where each letter in the plaintext is replaced with another letter or symbol.
+The key for this cipher is a mapping of each letter in the alphabet to a unique substitution.
+"""
+
+
+def substitution_encrypt(plaintext, key):
+    """
+    Encrypts the plaintext using a substitution cipher.
+
+    Args:
+      plaintext (str): The text to be encrypted.
+      key (dict): A dictionary mapping each letter to its substitution.
+
+    Returns:
+      str: The encrypted text.
+    """
+    encrypted = []
+    for char in plaintext:
+        if char.isalpha():
+            if char.isupper():
+                encrypted.append(key.get(char, char))
+            else:
+                encrypted.append(key.get(char.lower(), char).lower())
+        else:
+            encrypted.append(char)
+    return "".join(encrypted)
+
+
+def substitution_decrypt(ciphertext, key):
+    """
+    Decrypts the ciphertext using a substitution cipher.
+
+    Args:
+      ciphertext (str): The text to be decrypted.
+      key (dict): A dictionary mapping each letter to its substitution.
+
+    Returns:
+      str: The decrypted text.
+    """
+    reverse_key = {v: k for k, v in key.items()}
+    decrypted = []
+    for char in ciphertext:
+        if char.isalpha():
+            if char.isupper():
+                decrypted.append(reverse_key.get(char, char))
+            else:
+                decrypted.append(reverse_key.get(char.lower(), char).lower())
+        else:
+            decrypted.append(char)
+    return "".join(decrypted)
+
+
+"""
+OTP Cipher: A symmetric encryption algorithm that generates a random key for each message.
+The key must be at least as long as the message and should only be used once.
+The encryption function is:
+C = P XOR K
+where 'C' is the ciphertext, 'P' is the plaintext, and 'K' is the one-time pad key.
+The decryption function is:
+P = C XOR K
+where 'P' is the plaintext, 'C' is the ciphertext, and 'K' is the one-time pad key.
+"""
+
+
+def otp_encrypt(plaintext, key):
+    """
+    Encrypts the plaintext using the One-Time Pad (OTP) cipher.
+
+    Args:
+      plaintext (str): The text to be encrypted.
+      key (str): The one-time pad key (must be at least as long as the plaintext).
+
+    Returns:
+      str: The encrypted text.
+    """
+    if len(key) < len(plaintext):
+        raise ValueError("Key must be at least as long as the plaintext.")
+
+    encrypted = []
+    for p, k in zip(plaintext, key):
+        encrypted.append(chr(ord(p) ^ ord(k)))
+    return "".join(encrypted)
+
+
+def otp_decrypt(ciphertext, key):
+    """
+    Decrypts the ciphertext using the One-Time Pad (OTP) cipher.
+
+    Args:
+      ciphertext (str): The text to be decrypted.
+      key (str): The one-time pad key (must be at least as long as the ciphertext).
+
+    Returns:
+      str: The decrypted text.
+    """
+    if len(key) < len(ciphertext):
+        raise ValueError("Key must be at least as long as the ciphertext.")
+
+    decrypted = []
+    for c, k in zip(ciphertext, key):
+        decrypted.append(chr(ord(c) ^ ord(k)))
+    return "".join(decrypted)
