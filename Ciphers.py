@@ -219,8 +219,9 @@ def matrix_mod_inv(matrix, modulus):  # For Hill Cipher
     det = int(round(np.linalg.det(matrix))) % modulus
 
     # Check if the determinant has a modular inverse
-    det_inv = pow(det, -1, modulus)
-    if det_inv is None:
+    try:
+        det_inv = pow(det, -1, modulus)
+    except ValueError:
         raise ValueError("Matrix is not invertible under the given modulus.")
 
     # Compute the adjugate matrix
@@ -302,7 +303,7 @@ def hill_decrypt(ciphertext, key_matrix):
     decrypted = []
     for vector in ciphertext_vectors:
         decrypted_vector = np.dot(key_matrix_inv, vector) % 26
-        decrypted.extend(chr(int(round(num)) + ord("a")) for num in decrypted_vector)
+        decrypted.extend(chr((int(round(num)) % 26) + ord("a")) for num in decrypted_vector)
 
     return "".join(decrypted)
 
