@@ -80,3 +80,5 @@ cd CyberSecurityProject
 - `App.py`: The main application file containing the GUI logic.
 - `Ciphers.py`: Contains the implementation of various cryptographic ciphers.
 - `README.md`: Documentation for the project.
+
+- *Made by PhyniX and AlexBesios*
